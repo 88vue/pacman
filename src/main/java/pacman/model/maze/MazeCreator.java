@@ -1,5 +1,8 @@
 package pacman.model.maze;
 
+import pacman.model.maze.MazeWallCreator;
+import pacman.model.maze.MazeWall;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -33,9 +36,10 @@ public class MazeCreator {
                 char[] row = line.toCharArray();
 
                 for (int x = 0; x < row.length; x++){
-                    /**
-                     * TO DO: Implement Factory Method Pattern
-                     */
+                    MazeWallCreator wallCreator = new MazeWallCreator();
+                    maze.addRenderable((MazeWall) wallCreator.MazeWallBuilder(row[x], x * 16, y * 16), row[x], x * 16, y * 16);
+
+                    
 
                 }
 
