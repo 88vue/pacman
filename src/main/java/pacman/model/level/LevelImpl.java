@@ -7,17 +7,33 @@ import pacman.model.entity.dynamic.DynamicEntity;
 import pacman.model.entity.dynamic.ghost.Ghost;
 import pacman.model.entity.dynamic.ghost.GhostMode;
 import pacman.model.entity.dynamic.physics.PhysicsEngine;
+ import pacman.model.entity.dynamic.physics.Vector2D;
+import pacman.model.entity.dynamic.physics.BoundingBoxImpl;
+import pacman.model.entity.dynamic.physics.BoundingBox;
+import pacman.model.entity.dynamic.physics.KinematicState;
+import pacman.model.entity.dynamic.physics.KinematicStateImpl;
 import pacman.model.entity.dynamic.player.Controllable;
 import pacman.model.entity.dynamic.player.Pacman;
+import pacman.model.entity.dynamic.player.PacmanVisual;
 import pacman.model.entity.staticentity.StaticEntity;
 import pacman.model.entity.staticentity.collectable.Collectable;
 import pacman.model.maze.Maze;
+import pacman.model.maze.RenderableType;
+
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * Concrete implement of Pac-Man level
