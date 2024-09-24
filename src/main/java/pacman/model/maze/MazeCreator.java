@@ -1,7 +1,10 @@
 package pacman.model.maze;
 
 import pacman.model.maze.MazeWallCreator;
-import pacman.model.maze.MazeWall;
+import pacman.model.entity.dynamic.player.Pacman;
+import pacman.model.entity.dynamic.player.PacmanCreator;
+import pacman.model.entity.staticentity.StaticEntityImpl;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,9 +40,13 @@ public class MazeCreator {
 
                 for (int x = 0; x < row.length; x++){
                     MazeWallCreator wallCreator = new MazeWallCreator();
-                    maze.addRenderable((MazeWall) wallCreator.MazeWallBuilder(row[x], x * 16, y * 16), row[x], x * 16, y * 16);
+                    PacmanCreator pacmanCreator = new PacmanCreator();
 
-                    
+                    if(row[x] == 'p') {
+                        maze.addRenderable((Pacman) pacmanCreator.pacmanBuilder(x * 16, y *16), row[x], x * 16, y * 16);
+                    }else {
+                        maze.addRenderable((StaticEntityImpl) wallCreator.MazeWallBuilder(row[x], x * 16, y * 16), row[x], x * 16, y * 16);
+                    }                    
 
                 }
 
