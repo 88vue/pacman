@@ -4,6 +4,8 @@ import pacman.model.maze.MazeWallCreator;
 import pacman.model.entity.dynamic.player.Pacman;
 import pacman.model.entity.dynamic.player.PacmanCreator;
 import pacman.model.entity.staticentity.StaticEntityImpl;
+import pacman.model.entity.staticentity.collectable.Pellet;
+import pacman.model.entity.staticentity.collectable.PelletCreator;
 
 
 import java.io.File;
@@ -39,11 +41,17 @@ public class MazeCreator {
                 char[] row = line.toCharArray();
 
                 for (int x = 0; x < row.length; x++){
+                    int xCor = x * 16;
+                    int yCor = y * 16;
+
                     MazeWallCreator wallCreator = new MazeWallCreator();
                     PacmanCreator pacmanCreator = new PacmanCreator();
+                    PelletCreator pelletCreator = new PelletCreator();
 
                     if(row[x] == 'p') {
-                        maze.addRenderable((Pacman) pacmanCreator.pacmanBuilder(x * 16, y *16), row[x], x * 16, y * 16);
+                        maze.addRenderable((Pacman) pacmanCreator.pacmanBuilder(xCor, yCor), row[x], xCor, yCor);
+                    }else if(row[x] == '7'){
+                        maze.addRenderable((Pellet) pelletCreator.pelletBuilder(xCor, yCor), row[x], xCor, yCor);
                     }else {
                         maze.addRenderable((StaticEntityImpl) wallCreator.MazeWallBuilder(row[x], x * 16, y * 16), row[x], x * 16, y * 16);
                     }                    

@@ -21,14 +21,14 @@ public class PacmanCreator {
 
     private final Map<PacmanVisual, Image> images =  new HashMap<>();
 
-    Vector2D topLeft;
+    private Vector2D topLeft;
 
-    double width = 16;
-    double height = 16; 
+    private final double width = 23;
+    private final double height = 23; 
 
-    BoundingBox boundingBox;
+    private BoundingBox boundingBox;
 
-    KinematicState kinematicState;
+    private KinematicState kinematicState;
 
     public Pacman pacmanBuilder(int x, int y) {
         images.put(PacmanVisual.UP, up);
