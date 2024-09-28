@@ -30,6 +30,13 @@ public interface DynamicEntity extends Renderable {
     void setPosition(Vector2D position);
 
     /**
+     * Sets the layer of the Dynamic Entity
+     *
+     * @param layer layer to be used
+     */
+    void setLayer(Renderable.Layer layer);
+
+    /**
      * Checks if Dynamic Entity has collided with renderable
      *
      * @param renderable renderable to be checked for collision with Dynamic Entity

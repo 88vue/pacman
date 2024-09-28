@@ -6,6 +6,8 @@ import pacman.model.entity.dynamic.player.PacmanCreator;
 import pacman.model.entity.staticentity.StaticEntityImpl;
 import pacman.model.entity.staticentity.collectable.Pellet;
 import pacman.model.entity.staticentity.collectable.PelletCreator;
+import pacman.model.entity.dynamic.ghost.GhostImpl;
+import pacman.model.entity.dynamic.ghost.GhostCreator;
 
 
 import java.io.File;
@@ -19,15 +21,20 @@ import static java.lang.System.exit;
  */
 public class MazeCreator {
 
-    private final String fileName;
+    private static Maze instance;
     public static final int RESIZING_FACTOR = 16;
 
-    public MazeCreator(String fileName){
-        this.fileName = fileName;
+    // Singleton implementation
+    public static Maze getInstance(String fileName) {
+        
+        if (instance == null) {
+            instance = createMaze(fileName);
+        }
+        return instance;
     }
 
-    public Maze createMaze(){
-        File f = new File(this.fileName);
+    private static Maze createMaze(String fileName){
+        File f = new File(fileName);
         Maze maze = new Maze();
 
         try {
@@ -43,17 +50,25 @@ public class MazeCreator {
                 for (int x = 0; x < row.length; x++){
                     int xCor = x * 16;
                     int yCor = y * 16;
-
-                    MazeWallCreator wallCreator = new MazeWallCreator();
+                    
                     PacmanCreator pacmanCreator = new PacmanCreator();
-                    PelletCreator pelletCreator = new PelletCreator();
+                    Pacman pacman = pacmanCreator.pacmanBuilder(xCor+8, yCor-4);
 
                     if(row[x] == 'p') {
-                        maze.addRenderable((Pacman) pacmanCreator.pacmanBuilder(xCor, yCor), row[x], xCor, yCor);
+                        maze.addRenderable(pacman, row[x], xCor+8, yCor-4);
                     }else if(row[x] == '7'){
-                        maze.addRenderable((Pellet) pelletCreator.pelletBuilder(xCor, yCor), row[x], xCor, yCor);
+                        PelletCreator pelletCreator = new PelletCreator();
+                        Pellet pellet = pelletCreator.pelletBuilder(xCor, yCor);
+                        maze.addRenderable(pellet, row[x], xCor, yCor);
+                    }else if(row[x] == 'g'){
+                        GhostCreator ghostCreator = new GhostCreator();
+                        GhostImpl ghost = ghostCreator.ghostBuilder(xCor+4, yCor-4, pacman);
+                        System.out.println(ghost.getTargetLocation());
+                        maze.addRenderable(ghost, row[x], xCor+4, yCor-4);
                     }else {
-                        maze.addRenderable((StaticEntityImpl) wallCreator.MazeWallBuilder(row[x], x * 16, y * 16), row[x], x * 16, y * 16);
+                        MazeWallCreator wallCreator = new MazeWallCreator();
+                        StaticEntityImpl wall = wallCreator.MazeWallBuilder(row[x], xCor, yCor);
+                        maze.addRenderable(wall, row[x], xCor, yCor);
                     }                    
 
                 }
@@ -67,7 +82,7 @@ public class MazeCreator {
             System.out.println("No maze file was found.");
             exit(0);
         } catch (Exception e){
-            System.out.println("Error");
+            System.out.println(e);
             exit(0);
         }
 

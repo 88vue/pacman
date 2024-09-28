@@ -14,8 +14,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameEngine model = new GameEngineImpl("src/main/resources/config.json");
-        GameWindow window = new GameWindow(model, 448, 576);
+        GameWindow window = new GameWindow(448, 576);
 
         primaryStage.setTitle("Pac-Man");
         primaryStage.setScene(window.getScene());

@@ -41,6 +41,7 @@ import javafx.stage.Stage;
 public class LevelImpl implements Level {
 
     private static final int START_LEVEL_TIME = 200;
+    private int score;
     private final Maze maze;
     private List<Renderable> renderables;
     private Controllable player;
@@ -109,7 +110,6 @@ public class LevelImpl implements Level {
     @Override
     public void tick() {
         if (tickCount == modeLengths.get(currentGhostMode)) {
-
             // update ghost mode
             this.currentGhostMode = GhostMode.getNextGhostMode(currentGhostMode);
             for (Ghost ghost : this.ghosts) {
@@ -197,21 +197,36 @@ public class LevelImpl implements Level {
         return this.numLives;
     }
 
+    public int getScore() {
+        return this.score;
+    }
+
     private void setNumLives(int numLives) {
         this.numLives = numLives;
     }
 
     @Override
     public void handleLoseLife() {
+        this.numLives -= 1;
+        this.maze.setNumLives(this.maze.getNumLives() - 1);
+        this.player.reset();
+        for(Ghost ghost : this.ghosts) {
+            ghost.reset();
+        }
     }
 
     @Override
     public void handleGameEnd() {
+        List<DynamicEntity> entities = getDynamicEntities();
 
+        for (DynamicEntity entity: entities) {
+            entity.setLayer(Renderable.Layer.INVISIBLE);
+        }
     }
 
     @Override
     public void collect(Collectable collectable) {
-
+        this.score += collectable.getPoints();
+        this.collectables.remove(collectable);
     }
 }

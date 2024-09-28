@@ -23,8 +23,8 @@ public class PacmanCreator {
 
     private Vector2D topLeft;
 
-    private final double width = 23;
-    private final double height = 23; 
+    private final double width = 25;
+    private final double height = 25; 
 
     private BoundingBox boundingBox;
 

@@ -2,6 +2,8 @@ package pacman.model.engine;
 
 import pacman.model.entity.Renderable;
 import java.util.List;
+import pacman.model.level.Level;
+import pacman.model.maze.Maze;
 
 
 /**
@@ -21,6 +23,25 @@ public interface GameEngine {
      */
     void startGame();
 
+    /**
+     * Gets the maze instance
+     */
+    Maze getMaze();
+
+    /**
+     * Gets the level instance
+     */
+    Level getLevel();
+
+    /**
+     * Gets the win status
+     */
+    boolean getWinStatus();
+
+    /**
+     * Moves game to next level
+     */
+    void nextLevel();
 
     /**
      * Move the player up
