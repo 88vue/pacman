@@ -15,23 +15,32 @@ import java.util.List;
  */
 public class GameEngineImpl implements GameEngine {
 
+    private static GameEngine instance;
     private Level currentLevel;
     private int numLevels;
-    private final int currentLevelNo;
+    private int currentLevelNo;
     private Maze maze;
     private JSONArray levelConfigs;
-
-    public GameEngineImpl(String configPath) {
+    private boolean win = false;
+    
+    private GameEngineImpl(String configPath) {
         this.currentLevelNo = 0;
 
         init(new GameConfigurationReader(configPath));
     }
 
+    // Singleton implementation
+    public static GameEngine getInstance(String configPath) {
+        if (instance == null) {
+            instance = new GameEngineImpl(configPath);
+        }
+        return instance;
+    }
+
     private void init(GameConfigurationReader gameConfigurationReader) {
         // Set up map
         String mapFile = gameConfigurationReader.getMapFile();
-        MazeCreator mazeCreator = new MazeCreator(mapFile);
-        this.maze = mazeCreator.createMaze();
+        this.maze = MazeCreator.getInstance(mapFile);
         this.maze.setNumLives(gameConfigurationReader.getNumLives());
 
         // Get level configurations
@@ -45,6 +54,16 @@ public class GameEngineImpl implements GameEngine {
     @Override
     public List<Renderable> getRenderables() {
         return this.currentLevel.getRenderables();
+    }
+
+    @Override
+    public Maze getMaze() {
+        return this.maze;
+    }
+
+    @Override
+    public Level getLevel() {
+        return this.currentLevel;
     }
 
     @Override
@@ -72,8 +91,26 @@ public class GameEngineImpl implements GameEngine {
         startLevel();
     }
 
+    public void nextLevel() {
+        if (this.currentLevelNo == this.numLevels -1) {
+            this.win = true;
+        }else {
+            this.currentLevelNo += 1;
+            startLevel();
+        }
+    }
+
+    public boolean getWinStatus() {
+        return this.win;
+    }
+
     private void startLevel() {
-        JSONObject levelConfig = (JSONObject) levelConfigs.get(currentLevelNo);
+        JSONObject levelConfig = null;
+        if (currentLevelNo < levelConfigs.size()){
+            levelConfig = (JSONObject) levelConfigs.get(currentLevelNo);
+        }else{
+            return;
+        }
         // reset renderables to starting state
         maze.reset();
         this.currentLevel = new LevelImpl(levelConfig, maze);

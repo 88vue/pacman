@@ -6,6 +6,8 @@ import pacman.model.entity.dynamic.physics.*;
 import pacman.model.level.Level;
 import pacman.model.maze.Maze;
 
+import pacman.model.entity.dynamic.player.Pacman;
+
 import java.util.*;
 
 /**
@@ -13,7 +15,7 @@ import java.util.*;
  */
 public class GhostImpl implements Ghost {
 
-    private final Layer layer = Layer.FOREGROUND;
+    private Layer layer = Layer.FOREGROUND;
     private final Image image;
     private final BoundingBox boundingBox;
     private final Vector2D startingPosition;
@@ -21,12 +23,13 @@ public class GhostImpl implements Ghost {
     private KinematicState kinematicState;
     private GhostMode ghostMode;
     private Vector2D targetLocation;
+    private Pacman pacman;
     private Direction currentDirection;
     private Set<Direction> possibleDirections;
     private Vector2D playerPosition;
     private Map<GhostMode, Double> speeds;
 
-    public GhostImpl(Image image, BoundingBox boundingBox, KinematicState kinematicState, GhostMode ghostMode, Vector2D targetCorner, Direction currentDirection) {
+    public GhostImpl(Image image, BoundingBox boundingBox, KinematicState kinematicState, GhostMode ghostMode, Vector2D targetCorner, Direction currentDirection, Pacman pacman) {
         this.image = image;
         this.boundingBox = boundingBox;
         this.kinematicState = kinematicState;
@@ -35,7 +38,9 @@ public class GhostImpl implements Ghost {
         this.currentDirection = currentDirection;
         this.possibleDirections = new HashSet<>();
         this.targetCorner = targetCorner;
+        this.pacman = pacman;
         this.targetLocation = getTargetLocation();
+        
     }
 
     @Override
@@ -56,9 +61,11 @@ public class GhostImpl implements Ghost {
     }
 
     private void updateDirection() {
+        // System.out.println(this.possibleDirections);
         // Ghosts update their target location when they reach an intersection
         if (Maze.isAtIntersection(this.possibleDirections)) {
             this.targetLocation = getTargetLocation();
+            
         }
 
         this.currentDirection = selectDirection(possibleDirections);
@@ -71,10 +78,10 @@ public class GhostImpl implements Ghost {
         }
     }
 
-    private Vector2D getTargetLocation() {
+    public Vector2D getTargetLocation() {
         return switch (this.ghostMode) {
             // how does Ghost get the Player's position ??
-            case CHASE -> this.playerPosition;
+            case CHASE -> this.pacman.getPosition();
             case SCATTER -> this.targetCorner;
         };
     }
@@ -143,6 +150,10 @@ public class GhostImpl implements Ghost {
     @Override
     public Layer getLayer() {
         return this.layer;
+    }
+
+    public void setLayer(Renderable.Layer layer) {
+        this.layer = layer;
     }
 
     @Override

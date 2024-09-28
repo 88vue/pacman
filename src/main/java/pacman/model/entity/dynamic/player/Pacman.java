@@ -11,7 +11,7 @@ import java.util.*;
 public class Pacman implements Controllable {
 
     public static final int PACMAN_IMAGE_SWAP_TICK_COUNT = 8;
-    private final Layer layer = Layer.FOREGROUND;
+    private Layer layer = Layer.FOREGROUND;
     private final Map<PacmanVisual, Image> images;
     private final BoundingBox boundingBox;
     private final Vector2D startingPosition;
@@ -96,6 +96,10 @@ public class Pacman implements Controllable {
     @Override
     public Layer getLayer() {
         return this.layer;
+    }
+
+    public void setLayer(Renderable.Layer layer) {
+        this.layer = layer;
     }
 
     @Override
